@@ -11,18 +11,16 @@ import java.util.concurrent.ExecutionException;
 public class NewOrderMain {
 
     public static void main(String[] args) throws ExecutionException, InterruptedException {
-        var producer = new KafkaProducer<String, String>(properties());
-        var value = "123,321,0980";
-        var record = new ProducerRecord<>("ECOMMERCE_NEW_ORDER", value, value);
+        KafkaProducer<String, String> producer = new KafkaProducer<>(properties());
+        String value = "123,321,0980";
+        ProducerRecord<String, String> record = new ProducerRecord<>("ECOMMERCE_NEW_ORDER", value, value);
         producer.send(record, (data, exception) -> {
             if (exception != null) {
                 exception.printStackTrace();
                 return;
             }
             System.out.println("Sucesso " + data.topic() + ":::partition" + data.partition() + "/ offset " + data.offset() + "/ timestamp " + data.timestamp());
-
         }).get();
-
     }
 
     private static Properties properties() {
